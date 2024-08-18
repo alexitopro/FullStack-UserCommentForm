@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>Comment Section</title>
+</head>
+<body class="bg-light">
+    <div class="container pt-4">
+        <h1>User Comments</h1>
+    
+        <form method="POST" id="form">
+            <!--{% csrf_token %}: Esto es una etiqueta de plantilla de Django que inserta un token CSRF (Cross-Site Request Forgery). Este token es necesario para proteger la aplicación contra ataques CSRF, asegurando que el envío de formularios provenga de un origen legítimo.-->
+            {% csrf_token %}
+            <!--{{ form.as_p }}: También es parte de Django. Renderiza el formulario generado por Django en formato HTML, donde cada campo se presenta como un párrafo (<p>).-->
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        //const form = document.getElementById('form');: Selecciona el formulario por su id y lo asigna a la variable form.
+        const form = document.getElementById('form');
+        //form.addEventListener('submit', submitHandler);: Añade un event listener que ejecuta la función submitHandler cuando el formulario es enviado.
+        form.addEventListener('submit', submitHandler);
+
+        function submitHandler(){
+            //obligatorio
+            e.preventDefault();
+            //El cuerpo de la solicitud es un objeto FormData que contiene todos los campos del formulario.
+            fetch(form.action, {method: 'POST', body: new FormData(form)})
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'success'){
+                        console.log('hehe');
+                        alert('Comment submitted successfully');
+                        form.reset()
+                    }
+                })
+        }
+    </script>
+</body>
+</html>
